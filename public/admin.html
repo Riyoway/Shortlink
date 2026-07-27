@@ -4,35 +4,29 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Shortlink Admin</title>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js" defer></script>
   <style>
     :root {
-      color-scheme: light dark;
-      --bg: #f7f5ef;
-      --panel: #ffffff;
-      --ink: #202124;
-      --muted: #6d6f75;
-      --line: #d9d4ca;
-      --soft: #ece7dc;
-      --accent: #0b6f6a;
-      --accent-ink: #ffffff;
-      --danger: #b42318;
-      --focus: #c27c2c;
+      color-scheme: dark;
+      --background: #09090b;
+      --sidebar: #0c0c10;
+      --card: #111114;
+      --card-strong: #17171c;
+      --popover: #18181b;
+      --primary: #f4f4f5;
+      --primary-foreground: #09090b;
+      --secondary: #27272a;
+      --secondary-foreground: #fafafa;
+      --muted: #18181b;
+      --muted-foreground: #a1a1aa;
+      --accent: #2dd4bf;
+      --accent-foreground: #042f2e;
+      --destructive: #f87171;
+      --border: #27272a;
+      --input: #27272a;
+      --ring: #2dd4bf;
+      --shadow: rgb(0 0 0 / 0.45);
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    }
-
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --bg: #111318;
-        --panel: #1b1f28;
-        --ink: #f5f7fa;
-        --muted: #adb4c0;
-        --line: #343a46;
-        --soft: #252b36;
-        --accent: #51c3b8;
-        --accent-ink: #071817;
-        --danger: #ff8a80;
-        --focus: #f0b36b;
-      }
     }
 
     * {
@@ -42,65 +36,219 @@
     body {
       margin: 0;
       min-height: 100vh;
-      background: var(--bg);
-      color: var(--ink);
+      background:
+        radial-gradient(circle at top right, rgb(45 212 191 / 0.16), transparent 34rem),
+        linear-gradient(180deg, #0d0d12 0%, var(--background) 46%);
+      color: var(--primary);
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .app-shell {
+      display: grid;
+      grid-template-columns: 260px minmax(0, 1fr);
+      min-height: 100vh;
+    }
+
+    aside {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      border-right: 1px solid var(--border);
+      background: rgb(12 12 16 / 0.82);
+      backdrop-filter: blur(18px);
+      padding: 20px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+
+    .brand-mark,
+    .icon-box {
+      display: inline-grid;
+      place-items: center;
+      border: 1px solid var(--border);
+      background: var(--card-strong);
+      box-shadow: 0 12px 40px var(--shadow);
+    }
+
+    .brand-mark {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      color: var(--accent);
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 1rem;
+      line-height: 1.1;
+      letter-spacing: 0;
+    }
+
+    .brand p {
+      margin: 2px 0 0;
+      color: var(--muted-foreground);
+      font-size: 0.78rem;
+    }
+
+    nav {
+      display: grid;
+      gap: 6px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 38px;
+      border-radius: 8px;
+      padding: 0 10px;
+      color: var(--muted-foreground);
+      transition: color 160ms ease, background 160ms ease, transform 160ms ease;
+    }
+
+    .nav-item[aria-current="page"],
+    .nav-item:hover {
+      background: var(--secondary);
+      color: var(--primary);
+      transform: translateX(2px);
+    }
+
+    .sidebar-footer {
+      position: absolute;
+      right: 20px;
+      bottom: 20px;
+      left: 20px;
+      display: grid;
+      gap: 8px;
+      padding: 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--card);
+      color: var(--muted-foreground);
+      font-size: 0.84rem;
     }
 
     main {
-      width: min(1120px, calc(100% - 32px));
-      margin: 0 auto;
-      padding: 36px 0;
+      min-width: 0;
+      padding: 24px;
     }
 
-    header {
+    .topbar {
       display: flex;
-      align-items: end;
+      align-items: center;
       justify-content: space-between;
       gap: 16px;
       margin-bottom: 22px;
     }
 
-    h1 {
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 8px;
+      color: var(--muted-foreground);
+      font-size: 0.82rem;
+      font-weight: 650;
+      text-transform: uppercase;
+    }
+
+    .page-title {
       margin: 0;
-      font-size: clamp(2rem, 4vw, 3.3rem);
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
       line-height: 1;
       letter-spacing: 0;
     }
 
-    p {
+    .page-copy {
       margin: 8px 0 0;
-      color: var(--muted);
+      color: var(--muted-foreground);
     }
 
-    .domain {
-      padding: 8px 10px;
-      border: 1px solid var(--line);
-      border-radius: 6px;
-      color: var(--muted);
+    .domain-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 38px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0 12px;
+      background: var(--card);
+      color: var(--muted-foreground);
       white-space: nowrap;
     }
 
-    .toolbar,
-    form,
-    table,
-    .empty {
-      width: 100%;
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: 8px;
-    }
-
-    .toolbar {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 12px;
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
       margin-bottom: 14px;
     }
 
-    .search {
-      flex: 1;
-      max-width: 420px;
+    .stat-card,
+    .panel,
+    .table-panel {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: rgb(17 17 20 / 0.84);
+      box-shadow: 0 18px 60px var(--shadow);
+      animation: enter 360ms ease both;
+    }
+
+    .stat-card {
+      display: grid;
+      gap: 14px;
+      min-height: 118px;
+      padding: 16px;
+    }
+
+    .stat-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      color: var(--muted-foreground);
+      font-size: 0.86rem;
+      font-weight: 650;
+    }
+
+    .icon-box {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      color: var(--accent);
+    }
+
+    .stat-value {
+      margin: 0;
+      font-size: 2rem;
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .stat-note {
+      margin: 0;
+      color: var(--muted-foreground);
+      font-size: 0.86rem;
+    }
+
+    .panel {
+      margin-bottom: 14px;
+      padding: 16px;
+      animation-delay: 50ms;
     }
 
     form {
@@ -108,37 +256,46 @@
       grid-template-columns: minmax(160px, 220px) minmax(180px, 240px) minmax(260px, 1fr) auto auto;
       gap: 12px;
       align-items: end;
-      padding: 16px;
-      margin-bottom: 16px;
     }
 
     label,
     fieldset {
       display: grid;
-      gap: 6px;
+      gap: 7px;
+      min-width: 0;
       margin: 0;
       padding: 0;
       border: 0;
-      color: var(--muted);
-      font-size: 0.85rem;
+      color: var(--muted-foreground);
+      font-size: 0.84rem;
       font-weight: 650;
     }
 
     input {
       width: 100%;
       min-height: 42px;
-      border: 1px solid var(--line);
-      border-radius: 6px;
+      border: 1px solid var(--input);
+      border-radius: 8px;
       padding: 0 12px;
-      background: transparent;
-      color: var(--ink);
-      font: inherit;
+      background: var(--background);
+      color: var(--primary);
+      transition: border-color 160ms ease, box-shadow 160ms ease, background 160ms ease;
+    }
+
+    input::placeholder {
+      color: #71717a;
     }
 
     input:focus,
     button:focus-visible {
-      outline: 2px solid var(--focus);
-      outline-offset: 2px;
+      border-color: var(--ring);
+      outline: 0;
+      box-shadow: 0 0 0 3px rgb(45 212 191 / 0.18);
+    }
+
+    input:disabled {
+      cursor: not-allowed;
+      opacity: 0.52;
     }
 
     .segments {
@@ -146,18 +303,19 @@
       grid-template-columns: 1fr 1fr;
       min-height: 42px;
       padding: 3px;
-      border: 1px solid var(--line);
-      border-radius: 6px;
-      background: var(--soft);
+      border: 1px solid var(--input);
+      border-radius: 8px;
+      background: var(--background);
     }
 
     .segments label {
       display: grid;
       place-items: center;
       min-width: 0;
-      border-radius: 4px;
-      color: var(--muted);
+      border-radius: 6px;
+      color: var(--muted-foreground);
       cursor: pointer;
+      transition: color 160ms ease, background 160ms ease, transform 160ms ease;
     }
 
     .segments input {
@@ -168,61 +326,120 @@
     }
 
     .segments label:has(input:checked) {
-      background: var(--panel);
-      color: var(--ink);
-      box-shadow: 0 1px 2px rgb(0 0 0 / 0.08);
+      background: var(--secondary);
+      color: var(--primary);
+      transform: scale(0.99);
     }
 
     button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
       min-height: 42px;
-      border: 0;
-      border-radius: 6px;
+      border: 1px solid transparent;
+      border-radius: 8px;
       padding: 0 14px;
-      background: var(--accent);
-      color: var(--accent-ink);
-      font: inherit;
+      background: var(--primary);
+      color: var(--primary-foreground);
       font-weight: 700;
       cursor: pointer;
       white-space: nowrap;
+      transition: transform 160ms ease, opacity 160ms ease, background 160ms ease, border-color 160ms ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    button:active {
+      transform: translateY(0);
     }
 
     button[data-secondary],
     button[data-danger] {
-      background: transparent;
-      border: 1px solid var(--line);
-      color: var(--ink);
+      border-color: var(--border);
+      background: var(--secondary);
+      color: var(--secondary-foreground);
     }
 
     button[data-danger] {
-      color: var(--danger);
+      color: var(--destructive);
     }
 
-    button:disabled,
-    input:disabled {
+    button:disabled {
       cursor: not-allowed;
       opacity: 0.56;
+      transform: none;
+    }
+
+    [data-lucide] {
+      width: 16px;
+      height: 16px;
+      stroke-width: 2;
     }
 
     .status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
       min-height: 22px;
-      margin-bottom: 12px;
-      color: var(--muted);
+      margin-top: 12px;
+      color: var(--muted-foreground);
     }
 
     .status[data-error="true"] {
-      color: var(--danger);
+      color: var(--destructive);
+    }
+
+    .table-panel {
+      overflow: hidden;
+      animation-delay: 100ms;
+    }
+
+    .table-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .search-wrap {
+      position: relative;
+      flex: 1;
+      max-width: 420px;
+    }
+
+    .search-wrap [data-lucide] {
+      position: absolute;
+      top: 50%;
+      left: 12px;
+      color: var(--muted-foreground);
+      transform: translateY(-50%);
+    }
+
+    .search-wrap input {
+      padding-left: 38px;
+    }
+
+    .summary {
+      margin: 0;
+      color: var(--muted-foreground);
+      white-space: nowrap;
     }
 
     table {
+      width: 100%;
       border-collapse: separate;
       border-spacing: 0;
-      overflow: hidden;
     }
 
     th,
     td {
-      padding: 12px;
-      border-bottom: 1px solid var(--line);
+      padding: 13px 14px;
+      border-bottom: 1px solid var(--border);
       text-align: left;
       vertical-align: middle;
       overflow-wrap: anywhere;
@@ -232,14 +449,39 @@
       border-bottom: 0;
     }
 
+    tbody tr {
+      transition: background 160ms ease;
+    }
+
+    tbody tr:hover {
+      background: rgb(255 255 255 / 0.03);
+    }
+
     th {
-      color: var(--muted);
-      font-size: 0.78rem;
+      color: var(--muted-foreground);
+      font-size: 0.76rem;
+      font-weight: 750;
       text-transform: uppercase;
     }
 
-    .slug {
+    .short-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
       font-weight: 750;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 0 8px;
+      background: var(--secondary);
+      color: var(--muted-foreground);
+      font-size: 0.78rem;
+      font-weight: 700;
     }
 
     .actions {
@@ -249,13 +491,71 @@
       white-space: nowrap;
     }
 
+    .icon-button {
+      width: 36px;
+      min-height: 36px;
+      padding: 0;
+    }
+
     .empty {
-      padding: 28px;
-      color: var(--muted);
+      display: grid;
+      place-items: center;
+      gap: 10px;
+      min-height: 220px;
+      color: var(--muted-foreground);
       text-align: center;
     }
 
-    @media (max-width: 900px) {
+    .empty [data-lucide] {
+      width: 28px;
+      height: 28px;
+    }
+
+    @keyframes enter {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 1ms !important;
+        scroll-behavior: auto !important;
+        transition-duration: 1ms !important;
+      }
+    }
+
+    @media (max-width: 980px) {
+      .app-shell {
+        grid-template-columns: 1fr;
+      }
+
+      aside {
+        position: static;
+        height: auto;
+        padding: 14px 16px;
+      }
+
+      nav,
+      .sidebar-footer {
+        display: none;
+      }
+
+      .brand {
+        margin-bottom: 0;
+      }
+
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
       form {
         grid-template-columns: 1fr 1fr;
       }
@@ -266,17 +566,18 @@
     }
 
     @media (max-width: 720px) {
-      header,
-      .toolbar {
-        display: block;
+      main {
+        padding: 18px 14px;
       }
 
-      .domain {
-        display: inline-block;
-        margin-top: 12px;
+      .topbar,
+      .table-toolbar {
+        display: grid;
       }
 
-      .search {
+      .domain-pill,
+      .search-wrap {
+        width: 100%;
         max-width: none;
       }
 
@@ -302,7 +603,8 @@
       }
 
       tr {
-        border-bottom: 1px solid var(--line);
+        border-bottom: 1px solid var(--border);
+        padding: 10px 0;
       }
 
       tr:last-child {
@@ -311,6 +613,7 @@
 
       td {
         border-bottom: 0;
+        padding: 8px 14px;
       }
 
       .actions {
@@ -321,47 +624,106 @@
   </style>
 </head>
 <body>
-  <main>
-    <header>
-      <div>
-        <h1>Shortlink</h1>
-        <p>Create, customize, copy, edit, and remove short URLs for your domain.</p>
-      </div>
-      <div class="domain" id="domain">link.riyo.me</div>
-    </header>
-
-    <form id="link-form">
-      <fieldset>
-        Slug mode
-        <div class="segments">
-          <label><input type="radio" name="mode" value="auto" checked>Auto</label>
-          <label><input type="radio" name="mode" value="custom">Custom</label>
+  <div class="app-shell">
+    <aside>
+      <div class="brand">
+        <div class="brand-mark"><i data-lucide="link-2"></i></div>
+        <div>
+          <h1>Shortlink</h1>
+          <p>Private link operations</p>
         </div>
-      </fieldset>
+      </div>
 
-      <label>
-        Custom slug
-        <input name="slug" autocomplete="off" pattern="[a-zA-Z0-9][a-zA-Z0-9_-]{1,63}" placeholder="asId93" disabled>
-      </label>
+      <nav aria-label="Admin navigation">
+        <a class="nav-item" href="/admin" aria-current="page"><i data-lucide="layout-dashboard"></i>Dashboard</a>
+        <a class="nav-item" href="https://github.com/Riyoway/Shortlink" target="_blank" rel="noreferrer"><i data-lucide="github"></i>Repository</a>
+        <a class="nav-item" href="/" target="_blank" rel="noreferrer"><i data-lucide="external-link"></i>Domain</a>
+      </nav>
 
-      <label>
-        Destination URL
-        <input name="url" type="url" placeholder="https://github.com/yourname" required>
-      </label>
+      <div class="sidebar-footer">
+        <strong>Slug format</strong>
+        <span>Auto slugs use 6 characters. Custom slugs support letters, numbers, underscores, and hyphens.</span>
+      </div>
+    </aside>
 
-      <button type="submit" id="save-button">Create</button>
-      <button type="button" data-secondary id="reset-button">Clear</button>
-    </form>
+    <main>
+      <section class="topbar">
+        <div>
+          <p class="eyebrow"><i data-lucide="sparkles"></i>Short URL Management</p>
+          <h2 class="page-title">Dashboard</h2>
+          <p class="page-copy">Create and manage short URLs for your personal domain.</p>
+        </div>
+        <div class="domain-pill"><i data-lucide="globe-2"></i><span id="domain">link.riyo.me</span></div>
+      </section>
 
-    <div class="status" id="status" aria-live="polite"></div>
+      <section class="stats" aria-label="Shortlink stats">
+        <article class="stat-card">
+          <div class="stat-head">
+            <span>Total links</span>
+            <span class="icon-box"><i data-lucide="route"></i></span>
+          </div>
+          <p class="stat-value" id="total-links">0</p>
+          <p class="stat-note">Active short URLs</p>
+        </article>
 
-    <div class="toolbar">
-      <input class="search" id="search" type="search" placeholder="Search short links or destinations">
-      <p id="summary"></p>
-    </div>
+        <article class="stat-card">
+          <div class="stat-head">
+            <span>Total visits</span>
+            <span class="icon-box"><i data-lucide="mouse-pointer-click"></i></span>
+          </div>
+          <p class="stat-value" id="total-visits">0</p>
+          <p class="stat-note">Recorded redirects</p>
+        </article>
 
-    <section id="links"></section>
-  </main>
+        <article class="stat-card">
+          <div class="stat-head">
+            <span>Managed slugs</span>
+            <span class="icon-box"><i data-lucide="pen-line"></i></span>
+          </div>
+          <p class="stat-value" id="custom-links">0</p>
+          <p class="stat-note">Auto and custom aliases</p>
+        </article>
+      </section>
+
+      <section class="panel">
+        <form id="link-form">
+          <fieldset>
+            Slug mode
+            <div class="segments">
+              <label><input type="radio" name="mode" value="auto" checked>Auto</label>
+              <label><input type="radio" name="mode" value="custom">Custom</label>
+            </div>
+          </fieldset>
+
+          <label>
+            Custom slug
+            <input name="slug" autocomplete="off" pattern="[a-zA-Z0-9][a-zA-Z0-9_-]{1,63}" placeholder="asId93" disabled>
+          </label>
+
+          <label>
+            Destination URL
+            <input name="url" type="url" placeholder="https://github.com/yourname" required>
+          </label>
+
+          <button type="submit" id="save-button"><i data-lucide="plus" aria-hidden="true"></i>Create</button>
+          <button type="button" data-secondary id="reset-button"><i data-lucide="rotate-ccw" aria-hidden="true"></i>Clear</button>
+        </form>
+
+        <div class="status" id="status" aria-live="polite"></div>
+      </section>
+
+      <section class="table-panel">
+        <div class="table-toolbar">
+          <div class="search-wrap">
+            <i data-lucide="search" aria-hidden="true"></i>
+            <input id="search" type="search" placeholder="Search short links or destinations">
+          </div>
+          <p class="summary" id="summary">0 links</p>
+        </div>
+        <div id="links"></div>
+      </section>
+    </main>
+  </div>
 
   <script>
     const form = document.querySelector("#link-form");
@@ -371,15 +733,23 @@
     const search = document.querySelector("#search");
     const saveButton = document.querySelector("#save-button");
     const resetButton = document.querySelector("#reset-button");
+    const totalLinks = document.querySelector("#total-links");
+    const totalVisits = document.querySelector("#total-visits");
+    const customLinks = document.querySelector("#custom-links");
     const slugInput = form.elements.slug;
     const modeInputs = Array.from(form.elements.mode);
 
     let allLinks = [];
     let editingSlug = "";
 
+    document.addEventListener("DOMContentLoaded", () => {
+      window.lucide?.createIcons();
+    });
+
     function setStatus(message, isError = false) {
-      status.textContent = message;
+      status.innerHTML = message ? '<i data-lucide="' + (isError ? "circle-alert" : "circle-check") + '"></i><span>' + escapeHtml(message) + '</span>' : "";
       status.dataset.error = String(isError);
+      window.lucide?.createIcons();
     }
 
     function currentMode() {
@@ -391,7 +761,8 @@
       slugInput.disabled = !custom;
       slugInput.required = custom;
       if (!custom && !editingSlug) slugInput.value = "";
-      saveButton.textContent = editingSlug ? "Update" : "Create";
+      saveButton.innerHTML = '<i data-lucide="' + (editingSlug ? "save" : "plus") + '" aria-hidden="true"></i>' + (editingSlug ? "Update" : "Create");
+      window.lucide?.createIcons();
     }
 
     async function request(path, options) {
@@ -415,29 +786,35 @@
         return !query || link.slug.toLowerCase().includes(query) || link.url.toLowerCase().includes(query);
       });
 
-      summary.textContent = allLinks.length === 1 ? "1 link" : allLinks.length + " links";
+      const visits = allLinks.reduce((sum, link) => sum + link.visits, 0);
+      totalLinks.textContent = allLinks.length;
+      totalVisits.textContent = visits;
+      customLinks.textContent = allLinks.length;
+      summary.textContent = visible.length === 1 ? "1 visible link" : visible.length + " visible links";
 
       if (visible.length === 0) {
-        links.innerHTML = '<div class="empty">' + (allLinks.length === 0 ? "No links yet." : "No matching links.") + '</div>';
+        links.innerHTML = '<div class="empty"><i data-lucide="inbox"></i><span>' + (allLinks.length === 0 ? "No links yet." : "No matching links.") + '</span></div>';
+        window.lucide?.createIcons();
         return;
       }
 
       const rows = visible.map((link) => {
         const shortUrl = location.origin + "/" + encodeURIComponent(link.slug);
         return '<tr>' +
-          '<td class="slug"><a href="' + shortUrl + '" target="_blank" rel="noreferrer">' + escapeHtml(link.slug) + '</a></td>' +
+          '<td><a class="short-link" href="' + shortUrl + '" target="_blank" rel="noreferrer"><i data-lucide="corner-down-right"></i>' + escapeHtml(link.slug) + '</a></td>' +
           '<td><a href="' + escapeHtml(link.url) + '" target="_blank" rel="noreferrer">' + escapeHtml(link.url) + '</a></td>' +
-          '<td>' + link.visits + '</td>' +
+          '<td><span class="badge">' + link.visits + ' visits</span></td>' +
           '<td>' + new Date(link.updatedAt).toLocaleString() + '</td>' +
           '<td><div class="actions">' +
-            '<button data-secondary data-copy="' + escapeHtml(link.slug) + '">Copy</button>' +
-            '<button data-secondary data-edit="' + escapeHtml(link.slug) + '">Edit</button>' +
-            '<button data-danger data-delete="' + escapeHtml(link.slug) + '">Delete</button>' +
+            '<button class="icon-button" data-secondary data-copy="' + escapeHtml(link.slug) + '" title="Copy short URL" aria-label="Copy short URL"><i data-lucide="copy"></i></button>' +
+            '<button class="icon-button" data-secondary data-edit="' + escapeHtml(link.slug) + '" title="Edit link" aria-label="Edit link"><i data-lucide="pencil"></i></button>' +
+            '<button class="icon-button" data-danger data-delete="' + escapeHtml(link.slug) + '" title="Delete link" aria-label="Delete link"><i data-lucide="trash-2"></i></button>' +
           '</div></td>' +
         '</tr>';
       }).join("");
 
-      links.innerHTML = '<table><thead><tr><th>Short</th><th>Destination</th><th>Visits</th><th>Updated</th><th></th></tr></thead><tbody>' + rows + '</tbody></table>';
+      links.innerHTML = '<table><thead><tr><th>Short URL</th><th>Destination</th><th>Visits</th><th>Updated</th><th></th></tr></thead><tbody>' + rows + '</tbody></table>';
+      window.lucide?.createIcons();
     }
 
     form.addEventListener("submit", async (event) => {
@@ -449,6 +826,7 @@
       if (editingSlug) data.originalSlug = editingSlug;
 
       try {
+        saveButton.disabled = true;
         const result = await request("/api/links", {
           method: "POST",
           headers: { "content-type": "application/json" },
@@ -462,6 +840,8 @@
         setStatus("Saved and copied " + shortUrl);
       } catch (error) {
         setStatus(error.message, true);
+      } finally {
+        saveButton.disabled = false;
       }
     });
 
@@ -498,7 +878,7 @@
         slugInput.disabled = false;
         slugInput.required = true;
         form.elements.url.value = link.url;
-        saveButton.textContent = "Update";
+        syncMode();
         slugInput.focus();
         setStatus("Editing " + link.slug);
         return;
@@ -536,7 +916,8 @@
     syncMode();
     loadLinks().catch((error) => {
       setStatus(error.message, true);
-      links.innerHTML = '<div class="empty">Unable to load links.</div>';
+      links.innerHTML = '<div class="empty"><i data-lucide="cloud-off"></i><span>Unable to load links.</span></div>';
+      window.lucide?.createIcons();
     });
   </script>
 </body>
