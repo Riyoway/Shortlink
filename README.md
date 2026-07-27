@@ -32,6 +32,8 @@ UPSTASH_REDIS_REST_URL=...
 UPSTASH_REDIS_REST_TOKEN=...
 ```
 
+If your Vercel storage integration exposes `KV_REST_API_URL` and `KV_REST_API_TOKEN` instead, those names are supported too.
+
 Run locally:
 
 ```bash

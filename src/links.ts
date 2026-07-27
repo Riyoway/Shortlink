@@ -18,7 +18,10 @@ const RANDOM_ALPHABET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012
 const DEFAULT_SLUG_LENGTH = 6;
 const SLUG_INDEX_KEY = "shortlink:slugs";
 
-const redis = Redis.fromEnv();
+const redis = new Redis({
+  url: requiredEnv("UPSTASH_REDIS_REST_URL", "KV_REST_API_URL"),
+  token: requiredEnv("UPSTASH_REDIS_REST_TOKEN", "KV_REST_API_TOKEN")
+});
 
 export async function listLinks(): Promise<LinkRecord[]> {
   const slugs = await redis.smembers<string[]>(SLUG_INDEX_KEY);
@@ -124,4 +127,13 @@ function isValidDestination(value: string): boolean {
 
 function linkKey(slug: string): string {
   return `shortlink:link:${slug}`;
+}
+
+function requiredEnv(primary: string, fallback: string): string {
+  const value = process.env[primary] || process.env[fallback];
+  if (!value) {
+    throw new Error(`Missing ${primary} or ${fallback}.`);
+  }
+
+  return value;
 }
