@@ -11,7 +11,7 @@
       --background: #09090b;
       --sidebar: #0c0c10;
       --card: #111114;
-      --card-strong: #17171c;
+      --card-strong: #151519;
       --popover: #18181b;
       --primary: #f4f4f5;
       --primary-foreground: #09090b;
@@ -37,8 +37,8 @@
       margin: 0;
       min-height: 100vh;
       background:
-        radial-gradient(circle at top right, rgb(45 212 191 / 0.16), transparent 34rem),
-        linear-gradient(180deg, #0d0d12 0%, var(--background) 46%);
+        radial-gradient(circle at top right, rgb(45 212 191 / 0.08), transparent 30rem),
+        linear-gradient(180deg, #0b0b0f 0%, var(--background) 44%);
       color: var(--primary);
     }
 
@@ -54,7 +54,7 @@
 
     .app-shell {
       display: grid;
-      grid-template-columns: 260px minmax(0, 1fr);
+      grid-template-columns: 232px minmax(0, 1fr);
       min-height: 100vh;
     }
 
@@ -63,16 +63,16 @@
       top: 0;
       height: 100vh;
       border-right: 1px solid var(--border);
-      background: rgb(12 12 16 / 0.82);
-      backdrop-filter: blur(18px);
-      padding: 20px;
+      background: rgb(10 10 13 / 0.9);
+      backdrop-filter: blur(14px);
+      padding: 18px;
     }
 
     .brand {
       display: flex;
       align-items: center;
       gap: 10px;
-      margin-bottom: 28px;
+      margin-bottom: 24px;
     }
 
     .brand-mark,
@@ -81,7 +81,7 @@
       place-items: center;
       border: 1px solid var(--border);
       background: var(--card-strong);
-      box-shadow: 0 12px 40px var(--shadow);
+      box-shadow: 0 10px 32px rgb(0 0 0 / 0.28);
     }
 
     .brand-mark {
@@ -133,11 +133,7 @@
     }
 
     .sidebar-footer {
-      position: absolute;
-      right: 20px;
-      bottom: 20px;
-      left: 20px;
-      display: grid;
+      display: none;
       gap: 8px;
       padding: 14px;
       border: 1px solid var(--border);
@@ -149,7 +145,7 @@
 
     main {
       min-width: 0;
-      padding: 24px;
+      padding: 28px 32px 44px;
     }
 
     .topbar {
@@ -173,7 +169,7 @@
 
     .page-title {
       margin: 0;
-      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      font-size: clamp(1.9rem, 4vw, 2.5rem);
       line-height: 1;
       letter-spacing: 0;
     }
@@ -208,8 +204,8 @@
     .table-panel {
       border: 1px solid var(--border);
       border-radius: 8px;
-      background: rgb(17 17 20 / 0.84);
-      box-shadow: 0 18px 60px var(--shadow);
+      background: rgb(17 17 20 / 0.92);
+      box-shadow: 0 14px 44px rgb(0 0 0 / 0.26);
       animation: enter 360ms ease both;
     }
 
@@ -217,7 +213,7 @@
       display: grid;
       gap: 14px;
       min-height: 118px;
-      padding: 16px;
+      padding: 18px;
     }
 
     .stat-head {
@@ -252,15 +248,23 @@
 
     .panel {
       margin-bottom: 14px;
-      padding: 16px;
+      padding: 18px;
       animation-delay: 50ms;
     }
 
     form {
       display: grid;
-      grid-template-columns: minmax(160px, 220px) minmax(180px, 240px) minmax(260px, 1fr) auto auto;
-      gap: 12px;
+      grid-template-columns: minmax(180px, 220px) minmax(220px, 280px) minmax(360px, 1fr);
+      gap: 14px;
       align-items: end;
+    }
+
+    .form-actions {
+      grid-column: 1 / -1;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      padding-top: 2px;
     }
 
     label,
@@ -407,7 +411,7 @@
       align-items: center;
       justify-content: space-between;
       gap: 12px;
-      padding: 14px;
+      padding: 14px 16px;
       border-bottom: 1px solid var(--border);
     }
 
@@ -437,13 +441,14 @@
 
     table {
       width: 100%;
+      table-layout: fixed;
       border-collapse: separate;
       border-spacing: 0;
     }
 
     th,
     td {
-      padding: 13px 14px;
+      padding: 14px 16px;
       border-bottom: 1px solid var(--border);
       text-align: left;
       vertical-align: middle;
@@ -473,7 +478,25 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
+      max-width: 100%;
       font-weight: 750;
+      white-space: nowrap;
+    }
+
+    .short-link span,
+    .destination-link {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .destination-link {
+      display: -webkit-box;
+      max-width: 100%;
+      color: var(--primary);
+      line-height: 1.35;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      word-break: break-word;
     }
 
     .badge {
@@ -565,6 +588,10 @@
         grid-template-columns: 1fr 1fr;
       }
 
+      .form-actions {
+        grid-column: 1 / -1;
+      }
+
       form label:nth-of-type(2) {
         grid-column: 1 / -1;
       }
@@ -592,6 +619,14 @@
 
       form label:nth-of-type(2) {
         grid-column: auto;
+      }
+
+      .form-actions {
+        justify-content: stretch;
+      }
+
+      .form-actions button {
+        flex: 1;
       }
 
       table,
@@ -711,8 +746,10 @@
             <input name="url" type="url" placeholder="https://github.com/yourname" required>
           </label>
 
-          <button type="submit" id="save-button"><i data-lucide="plus" aria-hidden="true"></i>Create</button>
-          <button type="button" data-secondary id="reset-button"><i data-lucide="rotate-ccw" aria-hidden="true"></i>Clear</button>
+          <div class="form-actions">
+            <button type="submit" id="save-button"><i data-lucide="plus" aria-hidden="true"></i>Create</button>
+            <button type="button" data-secondary id="reset-button"><i data-lucide="rotate-ccw" aria-hidden="true"></i>Clear</button>
+          </div>
         </form>
 
         <div class="status" id="status" aria-live="polite"></div>
@@ -808,8 +845,8 @@
       const rows = visible.map((link) => {
         const shortUrl = location.origin + "/" + encodeURIComponent(link.slug);
         return '<tr>' +
-          '<td><a class="short-link" href="' + shortUrl + '" target="_blank" rel="noreferrer"><i data-lucide="corner-down-right"></i>' + escapeHtml(link.slug) + '</a></td>' +
-          '<td><a href="' + escapeHtml(link.url) + '" target="_blank" rel="noreferrer">' + escapeHtml(link.url) + '</a></td>' +
+          '<td><a class="short-link" href="' + shortUrl + '" target="_blank" rel="noreferrer"><i data-lucide="corner-down-right"></i><span>' + escapeHtml(link.slug) + '</span></a></td>' +
+          '<td><a class="destination-link" href="' + escapeHtml(link.url) + '" target="_blank" rel="noreferrer">' + escapeHtml(link.url) + '</a></td>' +
           '<td><span class="badge">' + link.visits + ' visits</span></td>' +
           '<td>' + new Date(link.updatedAt).toLocaleString() + '</td>' +
           '<td><div class="actions">' +
@@ -820,7 +857,7 @@
         '</tr>';
       }).join("");
 
-      links.innerHTML = '<table><thead><tr><th>Short URL</th><th>Destination</th><th>Visits</th><th>Updated</th><th></th></tr></thead><tbody>' + rows + '</tbody></table>';
+      links.innerHTML = '<table><colgroup><col style="width: 150px"><col><col style="width: 108px"><col style="width: 150px"><col style="width: 136px"></colgroup><thead><tr><th>Short URL</th><th>Destination</th><th>Visits</th><th>Updated</th><th></th></tr></thead><tbody>' + rows + '</tbody></table>';
       window.lucide?.createIcons();
     }
 
