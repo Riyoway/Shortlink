@@ -415,6 +415,13 @@
       border-bottom: 1px solid var(--border);
     }
 
+    .table-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+
     .search-wrap {
       position: relative;
       flex: 1;
@@ -439,6 +446,23 @@
       white-space: nowrap;
     }
 
+    select {
+      min-height: 38px;
+      border: 1px solid var(--input);
+      border-radius: 7px;
+      padding: 0 34px 0 10px;
+      background: var(--background);
+      color: var(--primary);
+      font: inherit;
+      font-size: 0.86rem;
+    }
+
+    .sort-direction {
+      width: 38px;
+      min-height: 38px;
+      padding: 0;
+    }
+
     table {
       width: 100%;
       table-layout: fixed;
@@ -446,9 +470,13 @@
       border-spacing: 0;
     }
 
+    thead {
+      background: rgb(255 255 255 / 0.015);
+    }
+
     th,
     td {
-      padding: 10px 12px;
+      padding: 12px 14px;
       border-bottom: 1px solid var(--border);
       text-align: left;
       vertical-align: middle;
@@ -460,18 +488,49 @@
     }
 
     tbody tr {
-      transition: background 160ms ease;
+      transition: background 160ms ease, box-shadow 160ms ease;
     }
 
     tbody tr:hover {
-      background: rgb(255 255 255 / 0.03);
+      background: rgb(255 255 255 / 0.035);
+      box-shadow: inset 2px 0 0 var(--primary);
     }
 
     th {
       color: var(--muted-foreground);
-      font-size: 0.76rem;
+      font-size: 0.72rem;
       font-weight: 750;
+      letter-spacing: 0.02em;
       text-transform: uppercase;
+    }
+
+    .sort-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 24px;
+      border: 0;
+      padding: 0;
+      background: transparent;
+      color: inherit;
+      font-size: inherit;
+      font-weight: inherit;
+      letter-spacing: inherit;
+      text-transform: inherit;
+    }
+
+    .sort-button:hover {
+      color: var(--primary);
+      transform: none;
+    }
+
+    .sort-button[data-active="true"] {
+      color: var(--primary);
+    }
+
+    .sort-button [data-lucide] {
+      width: 13px;
+      height: 13px;
     }
 
     .short-link {
@@ -479,26 +538,36 @@
       align-items: center;
       gap: 8px;
       max-width: 100%;
+      min-height: 32px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 0 10px;
+      background: var(--secondary);
+      color: var(--primary);
       font-weight: 750;
       white-space: nowrap;
     }
 
+    .short-link [data-lucide] {
+      color: var(--muted-foreground);
+    }
+
     .link-preview {
       display: grid;
-      grid-template-columns: 34px minmax(0, 1fr);
+      grid-template-columns: 40px minmax(0, 1fr);
       align-items: center;
-      gap: 10px;
+      gap: 12px;
       min-width: 0;
     }
 
     .favicon {
-      width: 32px;
-      height: 32px;
+      width: 38px;
+      height: 38px;
       border: 1px solid var(--border);
-      border-radius: 7px;
+      border-radius: 9px;
       background: var(--secondary);
       object-fit: contain;
-      padding: 5px;
+      padding: 6px;
     }
 
     .meta-title {
@@ -506,18 +575,26 @@
       overflow: hidden;
       color: var(--primary);
       font-weight: 700;
-      line-height: 1.25;
+      line-height: 1.2;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
 
+    .meta-host {
+      color: var(--primary);
+      font-size: 0.8rem;
+      font-weight: 650;
+    }
+
     .meta-subtitle {
-      display: flex;
-      gap: 8px;
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      align-items: center;
+      gap: 10px;
       min-width: 0;
-      margin-top: 4px;
+      margin-top: 5px;
       color: var(--muted-foreground);
-      font-size: 0.82rem;
+      font-size: 0.78rem;
       line-height: 1.2;
     }
 
@@ -536,7 +613,7 @@
     .destination-link {
       display: -webkit-box;
       max-width: 100%;
-      color: var(--primary);
+      color: var(--muted-foreground);
       line-height: 1.35;
       -webkit-box-orient: vertical;
       -webkit-line-clamp: 2;
@@ -546,6 +623,7 @@
     .badge {
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       min-height: 22px;
       border: 1px solid var(--border);
       border-radius: 999px;
@@ -554,18 +632,33 @@
       color: var(--muted-foreground);
       font-size: 0.74rem;
       font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .updated-time {
+      display: grid;
+      gap: 2px;
+      color: var(--primary);
+      font-weight: 650;
+      line-height: 1.15;
+    }
+
+    .updated-time span {
+      color: var(--muted-foreground);
+      font-size: 0.76rem;
+      font-weight: 600;
     }
 
     .actions {
       display: flex;
       justify-content: flex-end;
-      gap: 8px;
+      gap: 6px;
       white-space: nowrap;
     }
 
     .icon-button {
-      width: 34px;
-      min-height: 34px;
+      width: 32px;
+      min-height: 32px;
       padding: 0;
     }
 
@@ -652,9 +745,15 @@
       }
 
       .domain-pill,
-      .search-wrap {
+      .search-wrap,
+      .table-controls {
         width: 100%;
         max-width: none;
+      }
+
+      .table-controls {
+        grid-template-columns: 1fr auto;
+        display: grid;
       }
 
       form {
@@ -805,7 +904,17 @@
             <i data-lucide="search" aria-hidden="true"></i>
             <input id="search" type="search" placeholder="Search short links or destinations">
           </div>
-          <p class="summary" id="summary">0 links</p>
+          <div class="table-controls">
+            <select id="visit-filter" aria-label="Filter links">
+              <option value="all">All links</option>
+              <option value="visited">Visited</option>
+              <option value="unvisited">Unvisited</option>
+            </select>
+            <button class="sort-direction" type="button" data-secondary id="sort-direction" title="Toggle sort direction" aria-label="Toggle sort direction">
+              <i data-lucide="arrow-down-narrow-wide"></i>
+            </button>
+            <p class="summary" id="summary">0 links</p>
+          </div>
         </div>
         <div id="links"></div>
       </section>
@@ -818,6 +927,8 @@
     const status = document.querySelector("#status");
     const summary = document.querySelector("#summary");
     const search = document.querySelector("#search");
+    const visitFilter = document.querySelector("#visit-filter");
+    const sortDirectionButton = document.querySelector("#sort-direction");
     const saveButton = document.querySelector("#save-button");
     const resetButton = document.querySelector("#reset-button");
     const logoutButton = document.querySelector("#logout-button");
@@ -829,6 +940,8 @@
 
     let allLinks = [];
     let editingSlug = "";
+    let sortKey = "updatedAt";
+    let sortDirection = "desc";
 
     document.addEventListener("DOMContentLoaded", () => {
       window.lucide?.createIcons();
@@ -870,9 +983,19 @@
 
     function renderLinks() {
       const query = search.value.trim().toLowerCase();
-      const visible = allLinks.filter((link) => {
-        return !query || link.slug.toLowerCase().includes(query) || link.url.toLowerCase().includes(query);
-      });
+      const filter = visitFilter.value;
+      const visible = allLinks
+        .filter((link) => {
+          const haystack = [link.slug, link.url, link.title, link.siteName].filter(Boolean).join(" ").toLowerCase();
+          const queryMatches = !query || haystack.includes(query);
+          const filterMatches =
+            filter === "all" ||
+            (filter === "visited" && link.visits > 0) ||
+            (filter === "unvisited" && link.visits === 0);
+
+          return queryMatches && filterMatches;
+        })
+        .sort(compareLinks);
 
       const visits = allLinks.reduce((sum, link) => sum + link.visits, 0);
       totalLinks.textContent = allLinks.length;
@@ -891,17 +1014,18 @@
         const host = link.siteName || displayHost(link.url);
         const title = link.title || host;
         const favicon = link.faviconUrl || faviconFor(link.url);
+        const updated = formatUpdatedAt(link.updatedAt);
         return '<tr>' +
           '<td><a class="short-link" href="' + shortUrl + '" target="_blank" rel="noreferrer"><i data-lucide="corner-down-right"></i><span>' + escapeHtml(link.slug) + '</span></a></td>' +
           '<td><a class="link-preview" href="' + escapeHtml(link.url) + '" target="_blank" rel="noreferrer">' +
             '<img class="favicon" src="' + escapeHtml(favicon) + '" alt="" loading="lazy" onerror="this.remove()">' +
             '<span>' +
               '<span class="meta-title">' + escapeHtml(title) + '</span>' +
-              '<span class="meta-subtitle"><span>' + escapeHtml(host) + '</span><span class="destination-link">' + escapeHtml(link.url) + '</span></span>' +
+              '<span class="meta-subtitle"><span class="meta-host">' + escapeHtml(host) + '</span><span class="destination-link">' + escapeHtml(link.url) + '</span></span>' +
             '</span>' +
           '</a></td>' +
           '<td><span class="badge">' + link.visits + ' visits</span></td>' +
-          '<td>' + new Date(link.updatedAt).toLocaleString() + '</td>' +
+          '<td><span class="updated-time">' + escapeHtml(updated.date) + '<span>' + escapeHtml(updated.time) + '</span></span></td>' +
           '<td><div class="actions">' +
             '<button class="icon-button" data-secondary data-copy="' + escapeHtml(link.slug) + '" title="Copy short URL" aria-label="Copy short URL"><i data-lucide="copy"></i></button>' +
             '<button class="icon-button" data-secondary data-edit="' + escapeHtml(link.slug) + '" title="Edit link" aria-label="Edit link"><i data-lucide="pencil"></i></button>' +
@@ -910,8 +1034,46 @@
         '</tr>';
       }).join("");
 
-      links.innerHTML = '<table><colgroup><col style="width: 132px"><col><col style="width: 104px"><col style="width: 132px"><col style="width: 124px"></colgroup><thead><tr><th>Short URL</th><th>Destination</th><th>Visits</th><th>Updated</th><th></th></tr></thead><tbody>' + rows + '</tbody></table>';
+      links.innerHTML = '<table><colgroup><col style="width: 150px"><col><col style="width: 104px"><col style="width: 126px"><col style="width: 116px"></colgroup><thead><tr>' +
+        sortableHead("slug", "Short URL") +
+        sortableHead("title", "Destination") +
+        sortableHead("visits", "Visits") +
+        sortableHead("updatedAt", "Updated") +
+        '<th></th></tr></thead><tbody>' + rows + '</tbody></table>';
       window.lucide?.createIcons();
+    }
+
+    function compareLinks(a, b) {
+      const direction = sortDirection === "asc" ? 1 : -1;
+      const left = sortValue(a, sortKey);
+      const right = sortValue(b, sortKey);
+
+      if (typeof left === "number" && typeof right === "number") {
+        return (left - right) * direction;
+      }
+
+      return String(left).localeCompare(String(right), undefined, { sensitivity: "base" }) * direction;
+    }
+
+    function sortValue(link, key) {
+      if (key === "title") return link.title || link.siteName || displayHost(link.url);
+      if (key === "visits") return link.visits;
+      if (key === "updatedAt") return new Date(link.updatedAt).getTime();
+      return link.slug;
+    }
+
+    function sortableHead(key, label) {
+      const active = sortKey === key;
+      const icon = active && sortDirection === "asc" ? "arrow-up" : "arrow-down";
+      return '<th><button class="sort-button" type="button" data-sort="' + key + '" data-active="' + active + '">' + label + '<i data-lucide="' + icon + '"></i></button></th>';
+    }
+
+    function formatUpdatedAt(value) {
+      const date = new Date(value);
+      return {
+        date: date.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" }),
+        time: date.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" })
+      };
     }
 
     function displayHost(value) {
@@ -974,10 +1136,30 @@
     });
 
     search.addEventListener("input", renderLinks);
+    visitFilter.addEventListener("change", renderLinks);
+
+    sortDirectionButton.addEventListener("click", () => {
+      sortDirection = sortDirection === "asc" ? "desc" : "asc";
+      sortDirectionButton.innerHTML = '<i data-lucide="' + (sortDirection === "asc" ? "arrow-up-wide-narrow" : "arrow-down-narrow-wide") + '"></i>';
+      renderLinks();
+    });
 
     links.addEventListener("click", async (event) => {
       const button = event.target.closest("button");
       if (!button) return;
+
+      if (button.dataset.sort) {
+        if (sortKey === button.dataset.sort) {
+          sortDirection = sortDirection === "asc" ? "desc" : "asc";
+        } else {
+          sortKey = button.dataset.sort;
+          sortDirection = button.dataset.sort === "updatedAt" || button.dataset.sort === "visits" ? "desc" : "asc";
+        }
+
+        sortDirectionButton.innerHTML = '<i data-lucide="' + (sortDirection === "asc" ? "arrow-up-wide-narrow" : "arrow-down-narrow-wide") + '"></i>';
+        renderLinks();
+        return;
+      }
 
       const slug = button.dataset.copy || button.dataset.edit || button.dataset.delete;
       const link = allLinks.find((item) => item.slug === slug);
