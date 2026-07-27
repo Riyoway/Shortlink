@@ -27,9 +27,11 @@ export async function listLinks(): Promise<LinkRecord[]> {
   if (slugs.length === 0) return [];
 
   const records = await Promise.all(slugs.map((slug) => getLink(slug)));
-  return records
+  const links = records
     .filter((record): record is LinkRecord => Boolean(record))
     .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+
+  return Promise.all(links.map((link) => backfillMetadata(link)));
 }
 
 export async function getLink(slug: string): Promise<LinkRecord | null> {
@@ -103,6 +105,17 @@ export async function incrementVisits(link: LinkRecord): Promise<void> {
     ...link,
     visits: link.visits + 1
   });
+}
+
+async function backfillMetadata(link: LinkRecord): Promise<LinkRecord> {
+  if (link.title && link.faviconUrl && link.siteName) {
+    return link;
+  }
+
+  const metadata = await fetchLinkMetadata(link.url);
+  const updated = { ...link, ...metadata };
+  await redis.set(linkKey(link.slug), updated);
+  return updated;
 }
 
 export function isValidSlug(slug: string): boolean {
