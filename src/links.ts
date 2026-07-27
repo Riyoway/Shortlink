@@ -1,4 +1,5 @@
 import { randomBytes } from "node:crypto";
+import { fetchLinkMetadata, isPublicHttpUrl } from "./metadata";
 import { redis } from "./redis";
 
 export interface LinkRecord {
@@ -7,6 +8,9 @@ export interface LinkRecord {
   createdAt: string;
   updatedAt: string;
   visits: number;
+  title?: string;
+  siteName?: string;
+  faviconUrl?: string;
 }
 
 type LinkResult =
@@ -56,7 +60,7 @@ export async function createOrUpdateLink(body: unknown): Promise<LinkResult> {
     return {
       ok: false,
       status: 400,
-      error: "URL must start with http:// or https://."
+      error: "URL must be a public http:// or https:// URL."
     };
   }
 
@@ -70,12 +74,14 @@ export async function createOrUpdateLink(body: unknown): Promise<LinkResult> {
 
   const existing = await getLink(originalSlug || slug);
   const now = new Date().toISOString();
+  const metadata = await fetchLinkMetadata(url);
   const link: LinkRecord = {
     slug,
     url,
     createdAt: existing?.createdAt ?? now,
     updatedAt: now,
-    visits: existing?.visits ?? 0
+    visits: existing?.visits ?? 0,
+    ...metadata
   };
 
   await redis.set(linkKey(slug), link);
@@ -135,7 +141,7 @@ function parseLinkBody(body: unknown): { slug: string; originalSlug: string; url
 function isValidDestination(value: string): boolean {
   try {
     const url = new URL(value);
-    return url.protocol === "http:" || url.protocol === "https:";
+    return isPublicHttpUrl(url);
   } catch {
     return false;
   }

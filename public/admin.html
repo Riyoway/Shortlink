@@ -11,7 +11,7 @@
       --background: #09090b;
       --sidebar: #0c0c10;
       --card: #111114;
-      --card-strong: #151519;
+      --card-strong: #18181b;
       --popover: #18181b;
       --primary: #f4f4f5;
       --primary-foreground: #09090b;
@@ -19,12 +19,12 @@
       --secondary-foreground: #fafafa;
       --muted: #18181b;
       --muted-foreground: #a1a1aa;
-      --accent: #2dd4bf;
-      --accent-foreground: #042f2e;
+      --accent: #fafafa;
+      --accent-foreground: #09090b;
       --destructive: #f87171;
       --border: #27272a;
       --input: #27272a;
-      --ring: #2dd4bf;
+      --ring: #e4e4e7;
       --shadow: rgb(0 0 0 / 0.45);
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
@@ -37,8 +37,8 @@
       margin: 0;
       min-height: 100vh;
       background:
-        radial-gradient(circle at top right, rgb(45 212 191 / 0.08), transparent 30rem),
-        linear-gradient(180deg, #0b0b0f 0%, var(--background) 44%);
+        radial-gradient(circle at top right, rgb(255 255 255 / 0.06), transparent 28rem),
+        linear-gradient(180deg, #0b0b0d 0%, var(--background) 44%);
       color: var(--primary);
     }
 
@@ -54,7 +54,7 @@
 
     .app-shell {
       display: grid;
-      grid-template-columns: 232px minmax(0, 1fr);
+      grid-template-columns: 216px minmax(0, 1fr);
       min-height: 100vh;
     }
 
@@ -65,14 +65,14 @@
       border-right: 1px solid var(--border);
       background: rgb(10 10 13 / 0.9);
       backdrop-filter: blur(14px);
-      padding: 18px;
+      padding: 16px;
     }
 
     .brand {
       display: flex;
       align-items: center;
       gap: 10px;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
     }
 
     .brand-mark,
@@ -85,8 +85,8 @@
     }
 
     .brand-mark {
-      width: 36px;
-      height: 36px;
+      width: 34px;
+      height: 34px;
       border-radius: 8px;
       color: var(--accent);
     }
@@ -114,10 +114,10 @@
       align-items: center;
       gap: 10px;
       width: 100%;
-      min-height: 38px;
+      min-height: 36px;
       border: 0;
       border-radius: 8px;
-      padding: 0 10px;
+      padding: 0 9px;
       background: transparent;
       color: var(--muted-foreground);
       font: inherit;
@@ -145,7 +145,7 @@
 
     main {
       min-width: 0;
-      padding: 28px 32px 44px;
+      padding: 22px 28px 38px;
     }
 
     .topbar {
@@ -153,14 +153,14 @@
       align-items: center;
       justify-content: space-between;
       gap: 16px;
-      margin-bottom: 22px;
+      margin-bottom: 16px;
     }
 
     .eyebrow {
       display: flex;
       align-items: center;
       gap: 8px;
-      margin: 0 0 8px;
+      margin: 0 0 6px;
       color: var(--muted-foreground);
       font-size: 0.82rem;
       font-weight: 650;
@@ -169,13 +169,13 @@
 
     .page-title {
       margin: 0;
-      font-size: clamp(1.9rem, 4vw, 2.5rem);
+      font-size: clamp(1.65rem, 3vw, 2.15rem);
       line-height: 1;
       letter-spacing: 0;
     }
 
     .page-copy {
-      margin: 8px 0 0;
+      margin: 6px 0 0;
       color: var(--muted-foreground);
     }
 
@@ -183,7 +183,7 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      min-height: 38px;
+      min-height: 34px;
       border: 1px solid var(--border);
       border-radius: 8px;
       padding: 0 12px;
@@ -195,8 +195,8 @@
     .stats {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 14px;
-      margin-bottom: 14px;
+      gap: 10px;
+      margin-bottom: 10px;
     }
 
     .stat-card,
@@ -205,15 +205,15 @@
       border: 1px solid var(--border);
       border-radius: 8px;
       background: rgb(17 17 20 / 0.92);
-      box-shadow: 0 14px 44px rgb(0 0 0 / 0.26);
+      box-shadow: 0 12px 34px rgb(0 0 0 / 0.22);
       animation: enter 360ms ease both;
     }
 
     .stat-card {
       display: grid;
-      gap: 14px;
-      min-height: 118px;
-      padding: 18px;
+      gap: 10px;
+      min-height: 92px;
+      padding: 14px;
     }
 
     .stat-head {
@@ -227,15 +227,15 @@
     }
 
     .icon-box {
-      width: 34px;
-      height: 34px;
+      width: 30px;
+      height: 30px;
       border-radius: 8px;
       color: var(--accent);
     }
 
     .stat-value {
       margin: 0;
-      font-size: 2rem;
+      font-size: 1.65rem;
       line-height: 1;
       letter-spacing: 0;
     }
@@ -243,28 +243,28 @@
     .stat-note {
       margin: 0;
       color: var(--muted-foreground);
-      font-size: 0.86rem;
+      font-size: 0.8rem;
     }
 
     .panel {
-      margin-bottom: 14px;
-      padding: 18px;
+      margin-bottom: 10px;
+      padding: 14px;
       animation-delay: 50ms;
     }
 
     form {
       display: grid;
-      grid-template-columns: minmax(180px, 220px) minmax(220px, 280px) minmax(360px, 1fr);
-      gap: 14px;
+      grid-template-columns: minmax(164px, 200px) minmax(190px, 240px) minmax(320px, 1fr) auto;
+      gap: 10px;
       align-items: end;
     }
 
     .form-actions {
-      grid-column: 1 / -1;
+      grid-column: auto;
       display: flex;
       justify-content: flex-end;
-      gap: 10px;
-      padding-top: 2px;
+      gap: 8px;
+      padding-top: 0;
     }
 
     label,
@@ -282,9 +282,9 @@
 
     input {
       width: 100%;
-      min-height: 42px;
+      min-height: 38px;
       border: 1px solid var(--input);
-      border-radius: 8px;
+      border-radius: 7px;
       padding: 0 12px;
       background: var(--background);
       color: var(--primary);
@@ -299,7 +299,7 @@
     button:focus-visible {
       border-color: var(--ring);
       outline: 0;
-      box-shadow: 0 0 0 3px rgb(45 212 191 / 0.18);
+      box-shadow: 0 0 0 3px rgb(255 255 255 / 0.12);
     }
 
     input:disabled {
@@ -310,10 +310,10 @@
     .segments {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      min-height: 42px;
+      min-height: 38px;
       padding: 3px;
       border: 1px solid var(--input);
-      border-radius: 8px;
+      border-radius: 7px;
       background: var(--background);
     }
 
@@ -345,10 +345,10 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
-      min-height: 42px;
+      min-height: 38px;
       border: 1px solid transparent;
-      border-radius: 8px;
-      padding: 0 14px;
+      border-radius: 7px;
+      padding: 0 13px;
       background: var(--primary);
       color: var(--primary-foreground);
       font-weight: 700;
@@ -411,14 +411,14 @@
       align-items: center;
       justify-content: space-between;
       gap: 12px;
-      padding: 14px 16px;
+      padding: 10px 12px;
       border-bottom: 1px solid var(--border);
     }
 
     .search-wrap {
       position: relative;
       flex: 1;
-      max-width: 420px;
+      max-width: 360px;
     }
 
     .search-wrap [data-lucide] {
@@ -448,7 +448,7 @@
 
     th,
     td {
-      padding: 14px 16px;
+      padding: 10px 12px;
       border-bottom: 1px solid var(--border);
       text-align: left;
       vertical-align: middle;
@@ -483,6 +483,50 @@
       white-space: nowrap;
     }
 
+    .link-preview {
+      display: grid;
+      grid-template-columns: 34px minmax(0, 1fr);
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .favicon {
+      width: 32px;
+      height: 32px;
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      background: var(--secondary);
+      object-fit: contain;
+      padding: 5px;
+    }
+
+    .meta-title {
+      display: block;
+      overflow: hidden;
+      color: var(--primary);
+      font-weight: 700;
+      line-height: 1.25;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .meta-subtitle {
+      display: flex;
+      gap: 8px;
+      min-width: 0;
+      margin-top: 4px;
+      color: var(--muted-foreground);
+      font-size: 0.82rem;
+      line-height: 1.2;
+    }
+
+    .meta-subtitle span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
     .short-link span,
     .destination-link {
       overflow: hidden;
@@ -502,13 +546,13 @@
     .badge {
       display: inline-flex;
       align-items: center;
-      min-height: 24px;
+      min-height: 22px;
       border: 1px solid var(--border);
       border-radius: 999px;
       padding: 0 8px;
       background: var(--secondary);
       color: var(--muted-foreground);
-      font-size: 0.78rem;
+      font-size: 0.74rem;
       font-weight: 700;
     }
 
@@ -520,8 +564,8 @@
     }
 
     .icon-button {
-      width: 36px;
-      min-height: 36px;
+      width: 34px;
+      min-height: 34px;
       padding: 0;
     }
 
@@ -844,9 +888,18 @@
 
       const rows = visible.map((link) => {
         const shortUrl = location.origin + "/" + encodeURIComponent(link.slug);
+        const host = link.siteName || displayHost(link.url);
+        const title = link.title || host;
+        const favicon = link.faviconUrl || faviconFor(link.url);
         return '<tr>' +
           '<td><a class="short-link" href="' + shortUrl + '" target="_blank" rel="noreferrer"><i data-lucide="corner-down-right"></i><span>' + escapeHtml(link.slug) + '</span></a></td>' +
-          '<td><a class="destination-link" href="' + escapeHtml(link.url) + '" target="_blank" rel="noreferrer">' + escapeHtml(link.url) + '</a></td>' +
+          '<td><a class="link-preview" href="' + escapeHtml(link.url) + '" target="_blank" rel="noreferrer">' +
+            '<img class="favicon" src="' + escapeHtml(favicon) + '" alt="" loading="lazy" onerror="this.remove()">' +
+            '<span>' +
+              '<span class="meta-title">' + escapeHtml(title) + '</span>' +
+              '<span class="meta-subtitle"><span>' + escapeHtml(host) + '</span><span class="destination-link">' + escapeHtml(link.url) + '</span></span>' +
+            '</span>' +
+          '</a></td>' +
           '<td><span class="badge">' + link.visits + ' visits</span></td>' +
           '<td>' + new Date(link.updatedAt).toLocaleString() + '</td>' +
           '<td><div class="actions">' +
@@ -857,8 +910,25 @@
         '</tr>';
       }).join("");
 
-      links.innerHTML = '<table><colgroup><col style="width: 150px"><col><col style="width: 108px"><col style="width: 150px"><col style="width: 136px"></colgroup><thead><tr><th>Short URL</th><th>Destination</th><th>Visits</th><th>Updated</th><th></th></tr></thead><tbody>' + rows + '</tbody></table>';
+      links.innerHTML = '<table><colgroup><col style="width: 132px"><col><col style="width: 104px"><col style="width: 132px"><col style="width: 124px"></colgroup><thead><tr><th>Short URL</th><th>Destination</th><th>Visits</th><th>Updated</th><th></th></tr></thead><tbody>' + rows + '</tbody></table>';
       window.lucide?.createIcons();
+    }
+
+    function displayHost(value) {
+      try {
+        return new URL(value).hostname.replace(/^www\./, "");
+      } catch {
+        return value;
+      }
+    }
+
+    function faviconFor(value) {
+      try {
+        const hostname = new URL(value).hostname;
+        return "https://www.google.com/s2/favicons?domain=" + encodeURIComponent(hostname) + "&sz=64";
+      } catch {
+        return "";
+      }
     }
 
     form.addEventListener("submit", async (event) => {
