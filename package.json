@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": false,
   "description": "A tiny self-hosted shortlink service for your own domain.",
-  "type": "module",
   "scripts": {
     "dev": "npx vercel dev",
     "deploy": "npx vercel --prod",
