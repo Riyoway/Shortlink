@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Shortlink Admin</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #f7f5ef;
+      --panel: #ffffff;
+      --ink: #202124;
+      --muted: #6d6f75;
+      --line: #d9d4ca;
+      --accent: #0b6f6a;
+      --danger: #b42318;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #111318;
+        --panel: #1b1f28;
+        --ink: #f5f7fa;
+        --muted: #adb4c0;
+        --line: #343a46;
+        --accent: #51c3b8;
+        --danger: #ff8a80;
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--ink);
+    }
+
+    main {
+      width: min(980px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 40px 0;
+    }
+
+    header {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    p {
+      margin: 8px 0 0;
+      color: var(--muted);
+    }
+
+    form,
+    table {
+      width: 100%;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+
+    form {
+      display: grid;
+      grid-template-columns: minmax(120px, 180px) 1fr auto;
+      gap: 12px;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: grid;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 0.85rem;
+      font-weight: 650;
+    }
+
+    input {
+      width: 100%;
+      min-height: 42px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 0 12px;
+      background: transparent;
+      color: var(--ink);
+      font: inherit;
+    }
+
+    button {
+      min-height: 42px;
+      border: 0;
+      border-radius: 6px;
+      padding: 0 14px;
+      background: var(--accent);
+      color: white;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    button[data-danger] {
+      background: transparent;
+      border: 1px solid var(--line);
+      color: var(--danger);
+    }
+
+    table {
+      border-collapse: separate;
+      border-spacing: 0;
+      overflow: hidden;
+    }
+
+    th,
+    td {
+      padding: 12px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: middle;
+      overflow-wrap: anywhere;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    th {
+      color: var(--muted);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+    }
+
+    .slug {
+      font-weight: 750;
+    }
+
+    .actions {
+      width: 1%;
+      white-space: nowrap;
+    }
+
+    .empty {
+      padding: 28px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    @media (max-width: 720px) {
+      header {
+        display: block;
+      }
+
+      form {
+        grid-template-columns: 1fr;
+      }
+
+      table,
+      thead,
+      tbody,
+      tr,
+      th,
+      td {
+        display: block;
+      }
+
+      thead {
+        display: none;
+      }
+
+      tr {
+        border-bottom: 1px solid var(--line);
+      }
+
+      tr:last-child {
+        border-bottom: 0;
+      }
+
+      td {
+        border-bottom: 0;
+      }
+
+      .actions {
+        width: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div>
+        <h1>Shortlink</h1>
+        <p>Slug を空にすると link.riyo.me/asId93 のような 6 文字を自動生成します。</p>
+      </div>
+    </header>
+
+    <form id="link-form">
+      <label>
+        Slug
+        <input name="slug" autocomplete="off" pattern="[a-zA-Z0-9][a-zA-Z0-9_-]{1,63}" placeholder="asId93">
+      </label>
+      <label>
+        URL
+        <input name="url" type="url" placeholder="https://github.com/yourname" required>
+      </label>
+      <button type="submit">Save</button>
+    </form>
+
+    <section id="links"></section>
+  </main>
+
+  <script>
+    const form = document.querySelector("#link-form");
+    const links = document.querySelector("#links");
+
+    async function request(path, options) {
+      const response = await fetch(path, options);
+      if (!response.ok) {
+        const text = await response.text();
+        throw new Error(text || "Request failed");
+      }
+      return response.json();
+    }
+
+    async function loadLinks() {
+      const data = await request("/api/links");
+      if (data.links.length === 0) {
+        links.innerHTML = '<div class="empty">No links yet.</div>';
+        return;
+      }
+
+      const rows = data.links.map((link) => {
+        const shortUrl = location.origin + "/" + encodeURIComponent(link.slug);
+        return '<tr>' +
+          '<td class="slug"><a href="' + shortUrl + '" target="_blank" rel="noreferrer">' + escapeHtml(link.slug) + '</a></td>' +
+          '<td><a href="' + escapeHtml(link.url) + '" target="_blank" rel="noreferrer">' + escapeHtml(link.url) + '</a></td>' +
+          '<td>' + link.visits + '</td>' +
+          '<td>' + new Date(link.updatedAt).toLocaleString() + '</td>' +
+          '<td class="actions"><button data-danger data-delete="' + escapeHtml(link.slug) + '">Delete</button></td>' +
+        '</tr>';
+      }).join("");
+
+      links.innerHTML = '<table><thead><tr><th>Short</th><th>Destination</th><th>Visits</th><th>Updated</th><th></th></tr></thead><tbody>' + rows + '</tbody></table>';
+    }
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const data = Object.fromEntries(new FormData(form));
+      if (!data.slug) delete data.slug;
+
+      const result = await request("/api/links", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(data)
+      });
+
+      form.reset();
+      await navigator.clipboard?.writeText(location.origin + "/" + result.link.slug).catch(() => undefined);
+      await loadLinks();
+    });
+
+    links.addEventListener("click", async (event) => {
+      const button = event.target.closest("[data-delete]");
+      if (!button) return;
+      await request("/api/links/" + encodeURIComponent(button.dataset.delete), { method: "DELETE" });
+      await loadLinks();
+    });
+
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, (char) => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+      })[char]);
+    }
+
+    loadLinks().catch((error) => {
+      links.innerHTML = '<div class="empty">' + escapeHtml(error.message) + '</div>';
+    });
+  </script>
+</body>
+</html>

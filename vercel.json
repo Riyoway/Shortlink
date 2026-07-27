@@ -1,0 +1,16 @@
+{
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/admin.html"
+    },
+    {
+      "source": "/admin",
+      "destination": "/admin.html"
+    },
+    {
+      "source": "/:slug",
+      "destination": "/api/r/:slug"
+    }
+  ]
+}

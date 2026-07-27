@@ -1,0 +1,4 @@
+ADMIN_PASSWORD=change-this-local-password
+ADMIN_USERNAME=admin
+UPSTASH_REDIS_REST_URL=https://example.upstash.io
+UPSTASH_REDIS_REST_TOKEN=example-token
