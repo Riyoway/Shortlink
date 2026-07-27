@@ -2,11 +2,15 @@
   "rewrites": [
     {
       "source": "/",
-      "destination": "/admin.html"
+      "destination": "/api/forbidden"
     },
     {
       "source": "/admin",
-      "destination": "/admin.html"
+      "destination": "/api/admin"
+    },
+    {
+      "source": "/login",
+      "destination": "/login.html"
     },
     {
       "source": "/:slug",

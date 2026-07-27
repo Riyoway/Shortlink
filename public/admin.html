@@ -113,10 +113,15 @@
       display: flex;
       align-items: center;
       gap: 10px;
+      width: 100%;
       min-height: 38px;
+      border: 0;
       border-radius: 8px;
       padding: 0 10px;
+      background: transparent;
       color: var(--muted-foreground);
+      font: inherit;
+      text-align: left;
       transition: color 160ms ease, background 160ms ease, transform 160ms ease;
     }
 
@@ -638,6 +643,7 @@
         <a class="nav-item" href="/admin" aria-current="page"><i data-lucide="layout-dashboard"></i>Dashboard</a>
         <a class="nav-item" href="https://github.com/Riyoway/Shortlink" target="_blank" rel="noreferrer"><i data-lucide="github"></i>Repository</a>
         <a class="nav-item" href="/" target="_blank" rel="noreferrer"><i data-lucide="external-link"></i>Domain</a>
+        <button class="nav-item" type="button" id="logout-button"><i data-lucide="log-out"></i>Logout</button>
       </nav>
 
       <div class="sidebar-footer">
@@ -733,6 +739,7 @@
     const search = document.querySelector("#search");
     const saveButton = document.querySelector("#save-button");
     const resetButton = document.querySelector("#reset-button");
+    const logoutButton = document.querySelector("#logout-button");
     const totalLinks = document.querySelector("#total-links");
     const totalVisits = document.querySelector("#total-visits");
     const customLinks = document.querySelector("#custom-links");
@@ -848,6 +855,11 @@
     resetButton.addEventListener("click", () => {
       resetForm();
       setStatus("");
+    });
+
+    logoutButton.addEventListener("click", async () => {
+      await fetch("/api/login", { method: "DELETE" }).catch(() => undefined);
+      location.href = "/login";
     });
 
     modeInputs.forEach((input) => {

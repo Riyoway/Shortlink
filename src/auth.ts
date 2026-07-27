@@ -1,4 +1,5 @@
 import type { VercelRequest, VercelResponse } from "./vercel";
+import { hasValidSession } from "./session";
 
 export function requireAdmin(req: VercelRequest, res: VercelResponse): boolean {
   const username = process.env.ADMIN_USERNAME || "admin";
@@ -7,6 +8,10 @@ export function requireAdmin(req: VercelRequest, res: VercelResponse): boolean {
   if (!password) {
     res.status(500).send("ADMIN_PASSWORD is not configured.");
     return false;
+  }
+
+  if (hasValidSession(req.headers.cookie)) {
+    return true;
   }
 
   const header = req.headers.authorization;
@@ -32,8 +37,22 @@ export function requireAdmin(req: VercelRequest, res: VercelResponse): boolean {
   return true;
 }
 
+export function requireAdminPage(req: VercelRequest, res: VercelResponse): boolean {
+  if (!process.env.ADMIN_PASSWORD) {
+    res.status(500).send("ADMIN_PASSWORD is not configured.");
+    return false;
+  }
+
+  if (hasValidSession(req.headers.cookie)) {
+    return true;
+  }
+
+  res.setHeader("location", "/login");
+  res.status(302).send("");
+  return false;
+}
+
 function unauthorized(res: VercelResponse): void {
-  res.setHeader("www-authenticate", 'Basic realm="Shortlink Admin", charset="UTF-8"');
   res.setHeader("cache-control", "no-store");
   res.status(401).send("Unauthorized");
 }
