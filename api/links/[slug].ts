@@ -1,9 +1,12 @@
 import { requireAdmin } from "../../src/auth";
 import { deleteLink, isValidSlug } from "../../src/links";
 import { json } from "../../src/http";
+import { applySecurityHeaders, enforceRateLimit, enforceSameOrigin } from "../../src/security";
 import type { VercelRequest, VercelResponse } from "../../src/vercel";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+  applySecurityHeaders(res);
+  if (!(await enforceRateLimit(req, res, { name: "admin-api", limit: 120, windowSeconds: 60 }))) return;
   if (!requireAdmin(req, res)) return;
 
   const slug = String(req.query.slug ?? "");
@@ -12,6 +15,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   if (req.method === "DELETE") {
+    if (!enforceSameOrigin(req, res)) return;
+
     await deleteLink(slug);
     return json(res, 200, { ok: true });
   }

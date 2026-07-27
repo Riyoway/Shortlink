@@ -1,9 +1,12 @@
 import { requireAdmin } from "../src/auth";
 import { createOrUpdateLink, listLinks } from "../src/links";
 import { json, readJsonBody } from "../src/http";
+import { applySecurityHeaders, enforceRateLimit, enforceSameOrigin } from "../src/security";
 import type { VercelRequest, VercelResponse } from "../src/vercel";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+  applySecurityHeaders(res);
+  if (!(await enforceRateLimit(req, res, { name: "admin-api", limit: 120, windowSeconds: 60 }))) return;
   if (!requireAdmin(req, res)) return;
 
   if (req.method === "GET") {
@@ -11,6 +14,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   if (req.method === "POST") {
+    if (!enforceSameOrigin(req, res)) return;
+
     const body = await readJsonBody(req);
     const result = await createOrUpdateLink(body);
 

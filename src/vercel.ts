@@ -3,6 +3,10 @@ export interface VercelRequest {
   headers: {
     authorization?: string;
     cookie?: string;
+    host?: string;
+    origin?: string;
+    "x-forwarded-for"?: string | string[];
+    "x-real-ip"?: string | string[];
   };
   query: Record<string, string | string[] | undefined>;
   body?: unknown;

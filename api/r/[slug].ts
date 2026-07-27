@@ -1,7 +1,11 @@
 import { getLink, incrementVisits, isValidSlug } from "../../src/links";
+import { applySecurityHeaders, enforceRateLimit } from "../../src/security";
 import type { VercelRequest, VercelResponse } from "../../src/vercel";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+  applySecurityHeaders(res);
+  if (!(await enforceRateLimit(req, res, { name: "redirect", limit: 300, windowSeconds: 60 }))) return;
+
   if (req.method !== "GET") {
     res.setHeader("allow", "GET");
     return res.status(405).send("Method Not Allowed");
