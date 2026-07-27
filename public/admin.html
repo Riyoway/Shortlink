@@ -12,8 +12,11 @@
       --ink: #202124;
       --muted: #6d6f75;
       --line: #d9d4ca;
+      --soft: #ece7dc;
       --accent: #0b6f6a;
+      --accent-ink: #ffffff;
       --danger: #b42318;
+      --focus: #c27c2c;
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
@@ -24,8 +27,11 @@
         --ink: #f5f7fa;
         --muted: #adb4c0;
         --line: #343a46;
+        --soft: #252b36;
         --accent: #51c3b8;
+        --accent-ink: #071817;
         --danger: #ff8a80;
+        --focus: #f0b36b;
       }
     }
 
@@ -41,9 +47,9 @@
     }
 
     main {
-      width: min(980px, calc(100% - 32px));
+      width: min(1120px, calc(100% - 32px));
       margin: 0 auto;
-      padding: 40px 0;
+      padding: 36px 0;
     }
 
     header {
@@ -51,12 +57,12 @@
       align-items: end;
       justify-content: space-between;
       gap: 16px;
-      margin-bottom: 24px;
+      margin-bottom: 22px;
     }
 
     h1 {
       margin: 0;
-      font-size: clamp(1.8rem, 4vw, 3rem);
+      font-size: clamp(2rem, 4vw, 3.3rem);
       line-height: 1;
       letter-spacing: 0;
     }
@@ -66,25 +72,53 @@
       color: var(--muted);
     }
 
+    .domain {
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .toolbar,
     form,
-    table {
+    table,
+    .empty {
       width: 100%;
       background: var(--panel);
       border: 1px solid var(--line);
       border-radius: 8px;
     }
 
-    form {
-      display: grid;
-      grid-template-columns: minmax(120px, 180px) 1fr auto;
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
       gap: 12px;
-      padding: 16px;
-      margin-bottom: 20px;
+      padding: 12px;
+      margin-bottom: 14px;
     }
 
-    label {
+    .search {
+      flex: 1;
+      max-width: 420px;
+    }
+
+    form {
+      display: grid;
+      grid-template-columns: minmax(160px, 220px) minmax(180px, 240px) minmax(260px, 1fr) auto auto;
+      gap: 12px;
+      align-items: end;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    label,
+    fieldset {
       display: grid;
       gap: 6px;
+      margin: 0;
+      padding: 0;
+      border: 0;
       color: var(--muted);
       font-size: 0.85rem;
       font-weight: 650;
@@ -101,21 +135,81 @@
       font: inherit;
     }
 
+    input:focus,
+    button:focus-visible {
+      outline: 2px solid var(--focus);
+      outline-offset: 2px;
+    }
+
+    .segments {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 42px;
+      padding: 3px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--soft);
+    }
+
+    .segments label {
+      display: grid;
+      place-items: center;
+      min-width: 0;
+      border-radius: 4px;
+      color: var(--muted);
+      cursor: pointer;
+    }
+
+    .segments input {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+    }
+
+    .segments label:has(input:checked) {
+      background: var(--panel);
+      color: var(--ink);
+      box-shadow: 0 1px 2px rgb(0 0 0 / 0.08);
+    }
+
     button {
       min-height: 42px;
       border: 0;
       border-radius: 6px;
       padding: 0 14px;
       background: var(--accent);
-      color: white;
+      color: var(--accent-ink);
       font: inherit;
       font-weight: 700;
       cursor: pointer;
+      white-space: nowrap;
     }
 
+    button[data-secondary],
     button[data-danger] {
       background: transparent;
       border: 1px solid var(--line);
+      color: var(--ink);
+    }
+
+    button[data-danger] {
+      color: var(--danger);
+    }
+
+    button:disabled,
+    input:disabled {
+      cursor: not-allowed;
+      opacity: 0.56;
+    }
+
+    .status {
+      min-height: 22px;
+      margin-bottom: 12px;
+      color: var(--muted);
+    }
+
+    .status[data-error="true"] {
       color: var(--danger);
     }
 
@@ -149,7 +243,9 @@
     }
 
     .actions {
-      width: 1%;
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
       white-space: nowrap;
     }
 
@@ -159,13 +255,37 @@
       text-align: center;
     }
 
+    @media (max-width: 900px) {
+      form {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      form label:nth-of-type(2) {
+        grid-column: 1 / -1;
+      }
+    }
+
     @media (max-width: 720px) {
-      header {
+      header,
+      .toolbar {
         display: block;
+      }
+
+      .domain {
+        display: inline-block;
+        margin-top: 12px;
+      }
+
+      .search {
+        max-width: none;
       }
 
       form {
         grid-template-columns: 1fr;
+      }
+
+      form label:nth-of-type(2) {
+        grid-column: auto;
       }
 
       table,
@@ -194,7 +314,8 @@
       }
 
       .actions {
-        width: auto;
+        justify-content: flex-start;
+        flex-wrap: wrap;
       }
     }
   </style>
@@ -204,21 +325,40 @@
     <header>
       <div>
         <h1>Shortlink</h1>
-        <p>Leave the slug blank to generate a short 6-character link like link.riyo.me/asId93.</p>
+        <p>Create, customize, copy, edit, and remove short URLs for your domain.</p>
       </div>
+      <div class="domain" id="domain">link.riyo.me</div>
     </header>
 
     <form id="link-form">
+      <fieldset>
+        Slug mode
+        <div class="segments">
+          <label><input type="radio" name="mode" value="auto" checked>Auto</label>
+          <label><input type="radio" name="mode" value="custom">Custom</label>
+        </div>
+      </fieldset>
+
       <label>
-        Slug
-        <input name="slug" autocomplete="off" pattern="[a-zA-Z0-9][a-zA-Z0-9_-]{1,63}" placeholder="asId93">
+        Custom slug
+        <input name="slug" autocomplete="off" pattern="[a-zA-Z0-9][a-zA-Z0-9_-]{1,63}" placeholder="asId93" disabled>
       </label>
+
       <label>
-        URL
+        Destination URL
         <input name="url" type="url" placeholder="https://github.com/yourname" required>
       </label>
-      <button type="submit">Save</button>
+
+      <button type="submit" id="save-button">Create</button>
+      <button type="button" data-secondary id="reset-button">Clear</button>
     </form>
+
+    <div class="status" id="status" aria-live="polite"></div>
+
+    <div class="toolbar">
+      <input class="search" id="search" type="search" placeholder="Search short links or destinations">
+      <p id="summary"></p>
+    </div>
 
     <section id="links"></section>
   </main>
@@ -226,6 +366,33 @@
   <script>
     const form = document.querySelector("#link-form");
     const links = document.querySelector("#links");
+    const status = document.querySelector("#status");
+    const summary = document.querySelector("#summary");
+    const search = document.querySelector("#search");
+    const saveButton = document.querySelector("#save-button");
+    const resetButton = document.querySelector("#reset-button");
+    const slugInput = form.elements.slug;
+    const modeInputs = Array.from(form.elements.mode);
+
+    let allLinks = [];
+    let editingSlug = "";
+
+    function setStatus(message, isError = false) {
+      status.textContent = message;
+      status.dataset.error = String(isError);
+    }
+
+    function currentMode() {
+      return modeInputs.find((input) => input.checked)?.value || "auto";
+    }
+
+    function syncMode() {
+      const custom = currentMode() === "custom";
+      slugInput.disabled = !custom;
+      slugInput.required = custom;
+      if (!custom && !editingSlug) slugInput.value = "";
+      saveButton.textContent = editingSlug ? "Update" : "Create";
+    }
 
     async function request(path, options) {
       const response = await fetch(path, options);
@@ -238,19 +405,35 @@
 
     async function loadLinks() {
       const data = await request("/api/links");
-      if (data.links.length === 0) {
-        links.innerHTML = '<div class="empty">No links yet.</div>';
+      allLinks = data.links;
+      renderLinks();
+    }
+
+    function renderLinks() {
+      const query = search.value.trim().toLowerCase();
+      const visible = allLinks.filter((link) => {
+        return !query || link.slug.toLowerCase().includes(query) || link.url.toLowerCase().includes(query);
+      });
+
+      summary.textContent = allLinks.length === 1 ? "1 link" : allLinks.length + " links";
+
+      if (visible.length === 0) {
+        links.innerHTML = '<div class="empty">' + (allLinks.length === 0 ? "No links yet." : "No matching links.") + '</div>';
         return;
       }
 
-      const rows = data.links.map((link) => {
+      const rows = visible.map((link) => {
         const shortUrl = location.origin + "/" + encodeURIComponent(link.slug);
         return '<tr>' +
           '<td class="slug"><a href="' + shortUrl + '" target="_blank" rel="noreferrer">' + escapeHtml(link.slug) + '</a></td>' +
           '<td><a href="' + escapeHtml(link.url) + '" target="_blank" rel="noreferrer">' + escapeHtml(link.url) + '</a></td>' +
           '<td>' + link.visits + '</td>' +
           '<td>' + new Date(link.updatedAt).toLocaleString() + '</td>' +
-          '<td class="actions"><button data-danger data-delete="' + escapeHtml(link.slug) + '">Delete</button></td>' +
+          '<td><div class="actions">' +
+            '<button data-secondary data-copy="' + escapeHtml(link.slug) + '">Copy</button>' +
+            '<button data-secondary data-edit="' + escapeHtml(link.slug) + '">Edit</button>' +
+            '<button data-danger data-delete="' + escapeHtml(link.slug) + '">Delete</button>' +
+          '</div></td>' +
         '</tr>';
       }).join("");
 
@@ -259,26 +442,86 @@
 
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
+      setStatus("");
+
       const data = Object.fromEntries(new FormData(form));
-      if (!data.slug) delete data.slug;
+      if (currentMode() === "auto") delete data.slug;
+      if (editingSlug) data.originalSlug = editingSlug;
 
-      const result = await request("/api/links", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify(data)
-      });
+      try {
+        const result = await request("/api/links", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify(data)
+        });
 
-      form.reset();
-      await navigator.clipboard?.writeText(location.origin + "/" + result.link.slug).catch(() => undefined);
-      await loadLinks();
+        const shortUrl = location.origin + "/" + result.link.slug;
+        await navigator.clipboard?.writeText(shortUrl).catch(() => undefined);
+        resetForm();
+        await loadLinks();
+        setStatus("Saved and copied " + shortUrl);
+      } catch (error) {
+        setStatus(error.message, true);
+      }
     });
+
+    resetButton.addEventListener("click", () => {
+      resetForm();
+      setStatus("");
+    });
+
+    modeInputs.forEach((input) => {
+      input.addEventListener("change", syncMode);
+    });
+
+    search.addEventListener("input", renderLinks);
 
     links.addEventListener("click", async (event) => {
-      const button = event.target.closest("[data-delete]");
+      const button = event.target.closest("button");
       if (!button) return;
-      await request("/api/links/" + encodeURIComponent(button.dataset.delete), { method: "DELETE" });
-      await loadLinks();
+
+      const slug = button.dataset.copy || button.dataset.edit || button.dataset.delete;
+      const link = allLinks.find((item) => item.slug === slug);
+      if (!link) return;
+
+      if (button.dataset.copy) {
+        const shortUrl = location.origin + "/" + link.slug;
+        await navigator.clipboard?.writeText(shortUrl).catch(() => undefined);
+        setStatus("Copied " + shortUrl);
+        return;
+      }
+
+      if (button.dataset.edit) {
+        editingSlug = link.slug;
+        form.elements.mode.value = "custom";
+        slugInput.value = link.slug;
+        slugInput.disabled = false;
+        slugInput.required = true;
+        form.elements.url.value = link.url;
+        saveButton.textContent = "Update";
+        slugInput.focus();
+        setStatus("Editing " + link.slug);
+        return;
+      }
+
+      if (button.dataset.delete) {
+        if (!confirm("Delete " + link.slug + "?")) return;
+        try {
+          await request("/api/links/" + encodeURIComponent(link.slug), { method: "DELETE" });
+          if (editingSlug === link.slug) resetForm();
+          await loadLinks();
+          setStatus("Deleted " + link.slug);
+        } catch (error) {
+          setStatus(error.message, true);
+        }
+      }
     });
+
+    function resetForm() {
+      editingSlug = "";
+      form.reset();
+      syncMode();
+    }
 
     function escapeHtml(value) {
       return String(value).replace(/[&<>"']/g, (char) => ({
@@ -290,8 +533,10 @@
       })[char]);
     }
 
+    syncMode();
     loadLinks().catch((error) => {
-      links.innerHTML = '<div class="empty">' + escapeHtml(error.message) + '</div>';
+      setStatus(error.message, true);
+      links.innerHTML = '<div class="empty">Unable to load links.</div>';
     });
   </script>
 </body>

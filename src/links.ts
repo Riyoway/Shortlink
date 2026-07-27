@@ -38,8 +38,16 @@ export async function getLink(slug: string): Promise<LinkRecord | null> {
 }
 
 export async function createOrUpdateLink(body: unknown): Promise<LinkResult> {
-  const { slug: requestedSlug, url } = parseLinkBody(body);
+  const { slug: requestedSlug, originalSlug, url } = parseLinkBody(body);
   const slug = requestedSlug || (await generateAvailableSlug());
+
+  if (originalSlug && !isValidSlug(originalSlug)) {
+    return {
+      ok: false,
+      status: 400,
+      error: "Original slug is invalid."
+    };
+  }
 
   if (!isValidSlug(slug)) {
     return {
@@ -57,7 +65,15 @@ export async function createOrUpdateLink(body: unknown): Promise<LinkResult> {
     };
   }
 
-  const existing = await getLink(slug);
+  if (originalSlug && originalSlug !== slug && (await getLink(slug))) {
+    return {
+      ok: false,
+      status: 409,
+      error: "That custom slug is already in use."
+    };
+  }
+
+  const existing = await getLink(originalSlug || slug);
   const now = new Date().toISOString();
   const link: LinkRecord = {
     slug,
@@ -69,6 +85,10 @@ export async function createOrUpdateLink(body: unknown): Promise<LinkResult> {
 
   await redis.set(linkKey(slug), link);
   await redis.sadd(SLUG_INDEX_KEY, slug);
+  if (originalSlug && originalSlug !== slug) {
+    await deleteLink(originalSlug);
+  }
+
   return { ok: true, created: !existing, link };
 }
 
@@ -104,14 +124,15 @@ function randomSlug(length: number): string {
   return Array.from(bytes, (byte) => RANDOM_ALPHABET[byte % RANDOM_ALPHABET.length]).join("");
 }
 
-function parseLinkBody(body: unknown): { slug: string; url: string } {
+function parseLinkBody(body: unknown): { slug: string; originalSlug: string; url: string } {
   if (!body || typeof body !== "object") {
-    return { slug: "", url: "" };
+    return { slug: "", originalSlug: "", url: "" };
   }
 
   const candidate = body as Record<string, unknown>;
   return {
     slug: typeof candidate.slug === "string" ? candidate.slug.trim() : "",
+    originalSlug: typeof candidate.originalSlug === "string" ? candidate.originalSlug.trim() : "",
     url: typeof candidate.url === "string" ? candidate.url.trim() : ""
   };
 }
